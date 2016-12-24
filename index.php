@@ -17,9 +17,21 @@ function startThisPlugin() {
 register_activation_hook( __FILE__, 'startThisPlugin' );
 
 require plugin_dir_path(__FILE__) . 'thirdParty/advanced-custom-fields-pro/acf.php';
+require plugin_dir_path(__FILE__) . 'thirdParty/advanced-custom-fields-pro/Fields.php';
 require plugin_dir_path(__FILE__) . 'visualcomposer/ShowAllHouses.php';
 require plugin_dir_path(__FILE__) . 'visualcomposer/ShowSpecificHouses.php';
 
+/**
+ * Removendo exibição do menu
+ */
+
+function my_acf_init() {
+
+    acf_update_setting('show_admin', false);
+
+}
+
+add_action('acf/init', 'my_acf_init');
 
 /**
  * Criar uma página de opções
