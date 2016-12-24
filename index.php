@@ -5,6 +5,7 @@
  * Version: 1.0.0
  * Author: Pedro Lazari
  * Author URI: http://pedrolazari.com
+ * http://www.vistasoft.com.br/api/#pesquisar
  */
 if(!defined('ABSPATH')) die('Você não tem permissão');
 
