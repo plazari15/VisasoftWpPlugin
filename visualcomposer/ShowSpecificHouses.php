@@ -35,15 +35,14 @@ class ShowSpecificHouses{
     public function ShortcodeShowSpecificHouses(){
         /*Api dos Imóveis */
         $dados = array(
-            'fields' => array( "Cidade","Categoria","InfraEstrutura", "Bairro","ValorVenda", "ValorLocacao", "Latitude","Longitude", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas", "ValorVenda", "ValorLocacao", array("Foto" => ["Foto", "FotoPequena", "Destaque"])),
-
+            'fields' => array( "Cidade","Categoria","InfraEstrutura", "Bairro","ValorVenda", "ValorLocacao", "Latitude","Longitude", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas", "ValorVenda", "ValorLocacao", array("Foto" => ["Foto", "FotoPequena", "Destaque"]), array("Video" => ["Video"])),
         );
 
         $api = getCall($dados, 'imoveis/detalhes', filter_input(INPUT_GET, 'imovel', FILTER_VALIDATE_INT), false);
-        
-        /* Api do Google */
-        $google = getGoogleMaps('http://maps.googleapis.com/maps/api/geocode/json?latlng=-27.5945921,-48.608761200000004&sensor=true');
+        //print_r($api);
         if(count($api) > 0){
+            /* Api do Google */
+            $google = getGoogleMaps("http://maps.googleapis.com/maps/api/geocode/json?latlng={$api['Latitude']},{$api['Longitude']}&sensor=true");
             /* Repete as principais caracteristicas */
             foreach ($api['Caracteristicas'] as $key => $item){
                 if($item != 'Nao' && $key != 'Andar Do Apto'){
@@ -90,6 +89,7 @@ class ShowSpecificHouses{
                 '{{ Lavabos }}',
                 '{{ Caracteristicas }}',
                 '{{ Infraestrutura }}',
+                '{{ Video }}',
 
             ), array(
                 $api['FotoDestaque'],
@@ -108,7 +108,9 @@ class ShowSpecificHouses{
                 $api['Vagas'],
                 $api['Caracteristicas']['Lavabo'] == 'Nao' ? '0' : $api['Caracteristicas']['Lavabo'],
                 $Caracteristicas,
-                $Infraestrutura
+                $Infraestrutura,
+                !empty($api['Video']) ? "<iframe width=\"628\" height=\"315\" src='{$api['Video']['Video']}'
+          frameborder=\"0\" allowfullscreen></iframe>" : ''
             ), $template);
             return $final; //Return
         }
