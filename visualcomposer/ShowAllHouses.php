@@ -37,7 +37,6 @@ class ShowAllHouses{
             'fields' => array( "Categoria","Cidade","Bairro","ValorVenda", "ValorLocacao", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas" )
         );
         $api = getCall($dados, '/imoveis/listar', null, false);
-        //var_dump($api);
         if(count($api) > 0){
             $html .= "<div class='conteudo_meio'>";
                 foreach ($api as $item) {

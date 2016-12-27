@@ -80,6 +80,23 @@ function getCall($dados, $action, $imovel = null, $debug = false){
 }
 
 /**
+ * Google API
+ */
+function getGoogleMaps($url, $debug = false){
+    $ch = curl_init($url);
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    curl_setopt( $ch, CURLOPT_HTTPHEADER , array( 'Accept: application/json' ) );
+    $result = curl_exec( $ch );
+
+    $result = json_decode( $result, true );
+
+    if($debug){
+        return $url;
+    }
+    return $result;
+}
+
+/**
  * Valida a presença de uma foto
  */
 function showImage($foto){
@@ -97,6 +114,10 @@ function showImage($foto){
  */
 function getUrl($file = null){
     return plugin_dir_url(__FILE__) . $file;
+}
+
+function getPath($file = null){
+    return plugin_dir_path(__FILE__) . $file;
 }
 
 /**

@@ -33,16 +33,84 @@ class ShowSpecificHouses{
     }
 
     public function ShortcodeShowSpecificHouses(){
+        /*Api dos Imóveis */
         $dados = array(
-            'fields' => array( "Cidade","Bairro","ValorVenda", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas", "ValorVenda", "ValorLocacao", array("Foto" => ["Foto", "FotoPequena", "Destaque"])),
+            'fields' => array( "Cidade","Categoria","InfraEstrutura", "Bairro","ValorVenda", "ValorLocacao", "Latitude","Longitude", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas", "ValorVenda", "ValorLocacao", array("Foto" => ["Foto", "FotoPequena", "Destaque"])),
 
         );
-        $api = getCall($dados, 'imoveis/detalhes', filter_input(INPUT_GET, 'imovel', FILTER_VALIDATE_INT), true);
-        print_r($api);
+
+        $api = getCall($dados, 'imoveis/detalhes', filter_input(INPUT_GET, 'imovel', FILTER_VALIDATE_INT), false);
+        
+        /* Api do Google */
+        $google = getGoogleMaps('http://maps.googleapis.com/maps/api/geocode/json?latlng=-27.5945921,-48.608761200000004&sensor=true');
         if(count($api) > 0){
-            foreach ($api as $item) {
-                echo $_GET['imovel'] . '<br>';
+            /* Repete as principais caracteristicas */
+            foreach ($api['Caracteristicas'] as $key => $item){
+                if($item != 'Nao' && $key != 'Andar Do Apto'){
+                    $ArrayComposicao .= "- {$key}: {$item}<br>";
+                }
             }
+            /* Repete TODAS as  caracteristicas */
+            $i = 0;
+            foreach ($api['Caracteristicas'] as $key => $item){
+                    if(($i % 2 == 0)){
+                        $class = 'align-left';
+                    }else{
+                        $class = null;
+                    }
+                    $Caracteristicas .= "<span class='{$class}'>- {$key}: {$item}<br></span>";
+                    $i++;
+            }
+
+            /* Repete INFRAESTRUTURA */
+            foreach ($api['InfraEstrutura'] as $key => $item){
+                    $Infraestrutura .= "- {$key}: {$item}<br>";
+            }
+            /* Template */
+            $template = file_get_contents(getPath('assets/tpl/exibe_imovel.tpl.html'));
+
+            /**
+             * Faz o find geral
+             */
+            $final = str_replace(array(
+                '#FotoGrande#',
+                '{{ Status }}',
+                '{{ Valor }}',
+                '{{ Codigo }}',
+                '{{ Titulo }}',
+                '{{ Cidade }}',
+                '{{ ArrayComposicao }}',
+                '{{ url }}',
+                '{{ Endereco }}',
+                '{{ Numero }}',
+                '{{ Bairro }}',
+                '{{ Area }}',
+                '{{ Quartos }}',
+                '{{ Vagas }}',
+                '{{ Lavabos }}',
+                '{{ Caracteristicas }}',
+                '{{ Infraestrutura }}',
+
+            ), array(
+                $api['FotoDestaque'],
+                $api['Status'],
+                $api['ValorVenda'] > 0 ? number_format($api['ValorVenda'], 2, ',', '.') : number_format($api['ValorLocacao'], 2, ',', '.'),
+                $api['Codigo'],
+                $api['Categoria'],
+                $google['results'][0]['address_components'][2]['long_name'],
+                $ArrayComposicao,
+                $img = getUrl('/assets/img'),
+                $google['results'][0]['address_components'][1]['long_name'],
+                $google['results'][0]['address_components'][0]['long_name'],
+                $google['results'][0]['address_components'][3]['long_name'],
+                $api['AreaTotal'],
+                $api['Dormitorios'],
+                $api['Vagas'],
+                $api['Caracteristicas']['Lavabo'] == 'Nao' ? '0' : $api['Caracteristicas']['Lavabo'],
+                $Caracteristicas,
+                $Infraestrutura
+            ), $template);
+            return $final; //Return
         }
     }
 }

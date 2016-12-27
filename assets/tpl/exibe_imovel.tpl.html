@@ -1,0 +1,78 @@
+﻿<div class="exibe_imovel_conteudo">
+
+     <div class="coluna01">
+     
+          <div class="galeria">
+               
+               <div class="foto_grande"><img src="#FotoGrande#" width="625" height="479" style="float:left" alt=""/>
+                    <div class="tarja_informacao"> {{ Status }}</div>
+                    <div class="tarja_preco">R$ {{ Valor }}</div>
+            </div>
+                
+                <div class="fotos_menores">
+                  <div class="todas_as_fotos"><img src="foto_menor.png" width="198" height="156" alt=""/></div>
+                  <div class="todas_as_fotos"><img src="foto_menor.png" width="198" height="156" alt=""/></div>
+                  <div class="todas_as_fotos"><img src="foto_menor.png" width="198" height="156" alt=""/></div>
+                </div>
+          </div>
+          
+          
+          <div class="video_imovel"><iframe width="628" height="315" src="https://www.youtube.com/embed/zTNI5O_IIkM"
+          frameborder="0" allowfullscreen></iframe>
+          </div>
+          
+          
+          
+     </div>
+
+
+<div class="coluna02">
+     
+          
+  <div class="codigo_imovel">Código do Imóvel: {{ Codigo }}</div>
+  <div class="titulo_imovel_exibe">{{ Titulo }}</div>
+                <div class="descricao_imovel">
+          
+Um empreendimento em {{ Bairro }}, composto por:<br>
+{{ ArrayComposicao }}
+          
+  </div>
+          
+          
+          
+  <div class="dados-imovel">
+               <div class="caracteristica_imovel"><img src="{{ url }}/area.jpg" style="float: left;margin-top: -4px;" width="21" height="23" alt=""/>{{ Area }}m²</div>
+               <div class="caracteristica_imovel"><img src="{{ url }}/quartos.jpg" style="float: left;margin-top: -4px;" width="21" height="23" alt=""/> {{ Quartos }} quartos</div>
+               <div class="caracteristica_imovel"> <img src="{{ url }}/banheiros.jpg" style="float: left;margin-top: -4px;" width="21" height="23" alt=""/>{{ Lavabos }} Lavabo(s) </div>
+               <div class="caracteristica_imovel"> <img src="{{ url }}/garagem.jpg" style="float: left;margin-top: -4px;" width="21" height="23" alt=""/>{{ Vagas }} garagens</div>
+
+  </div>
+          
+          
+                         
+  <div class="endereco_imovel"> <strong>endereço:</strong> {{ Endereco }}, {{ Numero }}</div>
+  <div class="endereco_imovel"><strong>Localização:</strong> {{ Bairro }} - {{ Cidade }} </div>
+       <div class="ver_mapa_imovel"> <a href="#">Ver no Mapa</a></div>     
+                 
+     
+     
+     
+     
+     <div class="titulo_imovel_exibe">Características</div>
+                <div class="descricao_imovel">
+          
+{{ Caracteristicas }}
+          
+  </div>
+  
+  
+  <div class="titulo_imovel_exibe">Infra-Estrutura</div>
+                <div class="descricao_imovel">
+          
+{{ Infraestrutura }}
+          
+  </div>
+     
+     
+
+</div>
