@@ -47,7 +47,11 @@ class ShowAllHouses{
                     }else{
                         $valor = number_format($item['ValorVenda'], 2, ',', '.');
                     }
-
+                    if($item['Caracteristicas']['Lavabo'] == 'Nao'){
+                        $lavabo = 0;
+                    }else{
+                        $lavabo = $item['Caracteristicas']['Lavabo'];
+                    }
                     $img = getUrl();
                     $html .= "<div class='listagem_imoveis'>";
                         $html .= "<div class='titulo_imovel'>{$item['Categoria']}</div>";
@@ -65,7 +69,7 @@ class ShowAllHouses{
                         $html .= "<div class='dados-imovel'>";
                             $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/area.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$item['AreaTotal']}m²</div>";
                             $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/quartos.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$item['Dormitorios']} quartos</div>";
-                            $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/banheiros.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$item['AreaTotal']} banheiros</div>";
+                            $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/banheiros.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$lavabo} Lavabo(s)</div>";
                             $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/garagem.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$item['Vagas']} vagas</div>";
                         $html .= "</div> ";
                     $html .= "</div>";
