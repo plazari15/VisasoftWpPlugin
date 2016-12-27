@@ -34,14 +34,21 @@ class ShowAllHouses{
 
     public function ShortcodeAllHouses(){
         $dados = array(
-            'fields' => array( "Cidade","Bairro","ValorVenda", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas" )
+            'fields' => array( "Categoria","Cidade","Bairro","ValorVenda", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas" )
         );
-        $api = getCall($dados, '/imoveis/listar');
-
+        $api = getCall($dados, '/imoveis/listar', null, false);
+        //var_dump($api);
         if(count($api) > 0){
             foreach ($api as $item) {
-                echo $_GET['tipo_imovel'] . '<br>';
+                $html .= "<div class='col-md-5 custom_box'>";
+                $html .= "<h1 class='title_h1'>{$item['Categoria']}</h1>";
+                $html .= "<div class='col-md-4'><img class='img_width' width='246' height='167' src='{$item['FotoDestaque']}'></div>";
+                $html .= "<div class='col-md-8 topo_color'>TOPO</div>";
+                $html .= "<div class='col-md-8'>TOPO</div>";
+                $html .= "</div>";
             }
+
+            return $html;
         }
     }
 }

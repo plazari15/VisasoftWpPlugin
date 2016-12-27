@@ -44,6 +44,15 @@ acf_add_options_page( [
     'autoload' => true,
 ] );
 
+/**
+ * Adicionando o Bootstrap no jogo
+ */
+function wpdocs_theme_name_scripts() {
+    wp_enqueue_style( 'bootstrap', plugin_dir_url(__FILE__) . 'thirdParty/bootstrap/css/bootstrap.css', array(), date('s'));
+    wp_enqueue_style( 'cutom-plugin', plugin_dir_url(__FILE__) . 'assets/css/custom.css');
+//    wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/example.js', array(), '1.0.0', true );
+}
+add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
 
 /**
  * MAe da API

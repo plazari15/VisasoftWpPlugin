@@ -1,0 +1,19 @@
+.custom_box{
+    border: 1px solid #cccccc;
+    margin: 1px;
+}
+
+.title_h1{
+    font-weight: lighter!important;
+    color: #555!important;
+}
+
+.img_width{
+    width: 246px;
+    height: 167px;
+}
+
+.topo_color{
+    background-color: red;
+    color: #fff;
+}
