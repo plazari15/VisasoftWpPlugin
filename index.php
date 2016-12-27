@@ -28,7 +28,7 @@ require plugin_dir_path(__FILE__) . 'visualcomposer/ShowSpecificHouses.php';
 
 function my_acf_init() {
 
-    acf_update_setting('show_admin', false);
+    acf_update_setting('show_admin', true);
 
 }
 
@@ -90,6 +90,18 @@ function showImage($foto){
     return plugin_dir_url(__FILE__) . 'assets/img/sem-foto.gif';
 }
 
+/**
+ * Pega a URL Que chega ao plugin
+ * @param null $file
+ * @return string
+ */
 function getUrl($file = null){
     return plugin_dir_url(__FILE__) . $file;
+}
+
+/**
+ *
+ */
+function getOption($field){
+    return get_field($field, 'option');
 }

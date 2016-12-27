@@ -1,4 +1,5 @@
 <?php
+
 if( function_exists('acf_add_local_field_group') ):
 
 acf_add_local_field_group(array (
@@ -31,6 +32,50 @@ array (
 'label' => 'URL do Cliente',
 'name' => 'url_do_cliente',
 'type' => 'url',
+'instructions' => '',
+'required' => 1,
+'conditional_logic' => 0,
+'wrapper' => array (
+'width' => '',
+'class' => '',
+'id' => '',
+),
+),
+array (
+'post_type' => array (
+0 => 'page',
+),
+'taxonomy' => array (
+),
+'allow_null' => 0,
+'multiple' => 0,
+'allow_archives' => 1,
+'key' => 'field_5862bd5ad0e07',
+'label' => 'Página de Detalhes do imóvel',
+'name' => 'pagina_de_detalhes_do_imovel',
+'type' => 'page_link',
+'instructions' => '',
+'required' => 1,
+'conditional_logic' => 0,
+'wrapper' => array (
+'width' => '',
+'class' => '',
+'id' => '',
+),
+),
+array (
+'post_type' => array (
+0 => 'page',
+),
+'taxonomy' => array (
+),
+'allow_null' => 0,
+'multiple' => 0,
+'allow_archives' => 1,
+'key' => 'field_5862bd81d0e08',
+'label' => 'Página de Busca',
+'name' => 'página_busca',
+'type' => 'page_link',
 'instructions' => '',
 'required' => 1,
 'conditional_logic' => 0,

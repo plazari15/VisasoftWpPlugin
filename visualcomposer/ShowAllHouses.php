@@ -43,15 +43,21 @@ class ShowAllHouses{
                 foreach ($api as $item) {
                     $foto = showImage($item['FotoDestaque']);
                     if($item['Status'] == 'ALUGUEL'){
-                        $valor = number_format($item['ValorLocacao'], 2, ',', '.');
+                        if($valor > 0){
+                            $valor = number_format($item['ValorLocacao'], 2, ',', '.');
+                        }
                     }else{
-                        $valor = number_format($item['ValorVenda'], 2, ',', '.');
+                        if($valor > 0){
+                            $valor = number_format($item['ValorVenda'], 2, ',', '.');
+                        }
                     }
                     if($item['Caracteristicas']['Lavabo'] == 'Nao'){
                         $lavabo = 0;
                     }else{
                         $lavabo = $item['Caracteristicas']['Lavabo'];
                     }
+                    $query = getOption('pagina_de_detalhes_do_imovel');
+                    $Url = add_query_arg( array('imovel' => $item['Codigo']), $query );
                     $img = getUrl();
                     $html .= "<div class='listagem_imoveis'>";
                         $html .= "<div class='titulo_imovel'>{$item['Categoria']}</div>";
@@ -63,7 +69,7 @@ class ShowAllHouses{
                         $html .= "<div class='informacoes_imovel'>";
                             $html .= "<div class='preco_imovel'>R$ {$valor}</div>";
                             $html .= "<div class='resumo-imovel'>{$item['Categoria']}, com {$item['Dormitorios']} dormitórios + {$item['Vagas']} vaga(s) de garagem, com {$item['AreaTotal']} de área total...</div>";
-                            $html .= "<div class='ir_imovel'>Mais Detalhes</div>";
+                            $html .= "<div class='ir_imovel'><a href='{$Url}'>Mais Detalhes</a></div>";
                         $html .= "</div> ";
 
                         $html .= "<div class='dados-imovel'>";
