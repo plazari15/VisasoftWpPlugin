@@ -55,7 +55,7 @@ function wpdocs_theme_name_scripts() {
 add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
 
 /**
- * MAe da API
+ * Mãe da API
  */
 function getCall($dados, $action, $imovel = null, $debug = false){
     $key         =  get_field('api_key', 'option'); //Informe sua chave aqui
@@ -77,4 +77,19 @@ function getCall($dados, $action, $imovel = null, $debug = false){
         return $url;
     }
     return $result;
+}
+
+/**
+ * Valida a presença de uma foto
+ */
+function showImage($foto){
+    if(!empty($foto)){
+        return $foto;
+    }
+
+    return plugin_dir_url(__FILE__) . 'assets/img/sem-foto.gif';
+}
+
+function getUrl($file = null){
+    return plugin_dir_url(__FILE__) . $file;
 }
