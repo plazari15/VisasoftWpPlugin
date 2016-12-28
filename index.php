@@ -21,6 +21,8 @@ require plugin_dir_path(__FILE__) . 'thirdParty/advanced-custom-fields-pro/acf.p
 require plugin_dir_path(__FILE__) . 'thirdParty/advanced-custom-fields-pro/Fields.php';
 require plugin_dir_path(__FILE__) . 'visualcomposer/ShowAllHouses.php';
 require plugin_dir_path(__FILE__) . 'visualcomposer/ShowSpecificHouses.php';
+require plugin_dir_path(__FILE__) . 'visualcomposer/Search.php';
+require_once( plugin_dir_path(__FILE__) . 'update.php' );
 
 /**
  * Removendo exibição do menu
@@ -60,12 +62,16 @@ add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
 /**
  * Mãe da API
  */
-function getCall($dados, $action, $imovel = null, $debug = false){
+function getCall($dados, $action, $imovel = null, $filter = null, $debug = false){
     $key         =  get_field('api_key', 'option'); //Informe sua chave aqui
     $postFields  =  json_encode( $dados );
     $url         =  get_field('url_do_cliente', 'option') . $action .'?key=' . $key;
     if($imovel != null){
         $url .= '&imovel=' . $imovel;
+    }
+
+    if($filter != null){
+        $url .= '&filter=' . json_encode($filter);
     }
     $url        .=  '&pesquisa=' . $postFields;
 
@@ -129,3 +135,8 @@ function getPath($file = null){
 function getOption($field){
     return get_field($field, 'option');
 }
+
+/**
+ * Plugin Auto Update
+ */
+new WPUpdatesPluginUpdater_1541( 'http://wp-updates.com/api/2/plugin', plugin_basename(__FILE__));

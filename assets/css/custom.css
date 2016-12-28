@@ -216,6 +216,52 @@
     text-decoration:none;
 }
 
+.select-style {
+    padding: 10px;
+    margin: 9px;
+    border: 1px solid #ccc;
+    width: 280px;
+    overflow: hidden;
+    background-color: #fff;
+    background: #fff url(seta.png) no-repeat 90% 50%;
+    /* color: white; */
+}
+
+.select-style select {
+    padding: 5px 8px;
+    font-size: 15px;
+    color: #9c9c9c;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}
+
+.botao_buscar{
+    border: 0px;
+    background-color: red;
+    color: white;
+    padding: 8px 15px 8px 15px;
+    font-size: 18px;
+    /* float: right; */
+    /* position: absolute; */
+    margin: 0px 0px 0px 9px;
+}
+
+.busca_site{
+    width: 322px;
+    background-color: rgba(255, 255, 255, 0.88);
+    padding: 15px;
+}
+
 /* Google Maps - Evite mexer */
 .acf-map {
     width: 100%;

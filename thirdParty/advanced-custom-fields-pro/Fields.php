@@ -7,6 +7,23 @@ if( function_exists('acf_add_local_field_group') ):
         'title' => 'Configurações',
         'fields' => array (
             array (
+                'message' => 'Mantenha seu plugin sempre atualizado! Após o desenvolvimento do mesmo, durante 30 dias você tem suporte contra qualquer tipo de problema ou conflito em seu plugin, e por meio das atualizações automáticas, nos podemos te entregar os últimos updates!',
+                'esc_html' => 0,
+                'new_lines' => 'wpautop',
+                'key' => 'field_5863448d813dd',
+                'label' => 'Lembre-se!',
+                'name' => '',
+                'type' => 'message',
+                'instructions' => '',
+                'required' => 0,
+                'conditional_logic' => 0,
+                'wrapper' => array (
+                    'width' => '',
+                    'class' => '',
+                    'id' => '',
+                ),
+            ),
+            array (
                 'default_value' => '',
                 'maxlength' => '',
                 'placeholder' => '',
