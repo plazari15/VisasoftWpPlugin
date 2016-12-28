@@ -48,8 +48,11 @@ acf_add_options_page( [
  * Adicionando o Bootstrap no jogo
  */
 function wpdocs_theme_name_scripts() {
+    $googleKey = getOption('google_api');
     wp_enqueue_style( 'bootstrap', plugin_dir_url(__FILE__) . 'thirdParty/bootstrap/css/bootstrap.css', array(), date('s'));
-    wp_enqueue_style( 'cutom-plugin', plugin_dir_url(__FILE__) . 'assets/css/custom.css');
+    wp_enqueue_style( 'custom-plugin', plugin_dir_url(__FILE__) . 'assets/css/custom.css');
+    wp_enqueue_script( 'script-maps', plugin_dir_url(__FILE__) . 'assets/js/GoogleMaps.js', array('jquery', 'script-google'), '1.0.0', true );
+    wp_enqueue_script( 'script-google', "https://maps.googleapis.com/maps/api/js?key={$googleKey}", array('jquery'), '1.0.0', true );
 //    wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/example.js', array(), '1.0.0', true );
 }
 add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );

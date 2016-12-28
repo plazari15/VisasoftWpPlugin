@@ -68,6 +68,14 @@ class ShowSpecificHouses{
             /* Template */
             $template = file_get_contents(getPath('assets/tpl/exibe_imovel.tpl.html'));
 
+            /*
+             * Cria Imagens
+             */
+            foreach ($api['Foto'] as $foto){
+                if($foto['Destaque'] != "Sim"){
+                    $Fotos .= "<div class=\"todas_as_fotos\"><img src='{$foto['Foto']}' width=\"198\" height=\"156\" alt=\"\"/></div>";
+                }
+            }
             /**
              * Faz o find geral
              */
@@ -90,6 +98,9 @@ class ShowSpecificHouses{
                 '{{ Caracteristicas }}',
                 '{{ Infraestrutura }}',
                 '{{ Video }}',
+                '{{ Fotos }}',
+                '{{ Latitude }}',
+                '{{ Longitude }}',
 
             ), array(
                 $api['FotoDestaque'],
@@ -110,7 +121,10 @@ class ShowSpecificHouses{
                 $Caracteristicas,
                 $Infraestrutura,
                 !empty($api['Video']) ? "<iframe width=\"628\" height=\"315\" src='{$api['Video']['Video']}'
-          frameborder=\"0\" allowfullscreen></iframe>" : ''
+          frameborder=\"0\" allowfullscreen></iframe>" : '',
+                $Fotos,
+                $api['Latitude'],
+                $api['Longitude']
             ), $template);
             return $final; //Return
         }

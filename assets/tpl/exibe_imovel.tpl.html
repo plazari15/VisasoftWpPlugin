@@ -10,15 +10,17 @@
             </div>
                 
                 <div class="fotos_menores">
-                  <div class="todas_as_fotos"><img src="foto_menor.png" width="198" height="156" alt=""/></div>
-                  <div class="todas_as_fotos"><img src="foto_menor.png" width="198" height="156" alt=""/></div>
-                  <div class="todas_as_fotos"><img src="foto_menor.png" width="198" height="156" alt=""/></div>
+                  {{ Fotos }}
                 </div>
           </div>
           
           
           <div class="video_imovel">{{ Video }}</div>
-          
+
+              <div class="acf-map">
+                  <div class="marker" data-lat="{{ Latitude }}" data-lng="{{ Longitude }}"></div>
+              </div>
+
           
           
      </div>
