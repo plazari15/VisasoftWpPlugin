@@ -1,7 +1,7 @@
 <?php
 
 /**
- * template part for Search form located beside main navigation. views/header/global
+ * template part for responsive search. views/header/global
  *
  * @author 		Artbees
  * @package 	jupiter/views
@@ -10,20 +10,31 @@
 
 global $mk_options;
 
-$icon_height = ($view_params['header_style'] != 2) ? 'add-header-height' : '';
+if(!is_header_show() && $view_params['is_shortcode'] != 'true') return false;
 
-if ($mk_options['header_search_location'] == 'beside_nav') { ?>
+$menu_location = !empty($view_params['menu_location']) ? $view_params['menu_location'] : mk_main_nav_location();
 
-<div class="main-nav-side-search">
-	
-	<a class="mk-search-trigger <?php echo $icon_height; ?> mk-toggle-trigger" href="#"><i class="mk-icon-search"></i></a>
+$hide_header_nav = isset($mk_options['hide_header_nav']) ? $mk_options['hide_header_nav'] : 'true';
 
-	<div id="mk-nav-search-wrapper" class="mk-box-to-trigger">
-		<form method="get" id="mk-header-navside-searchform" action="<?php echo getOption('página_busca'); ?>/">
-<!--			<input type="text" name="s" id="mk-ajax-search-input" />-->
-<!--			--><?php //wp_nonce_field('mk-ajax-search-form', 'security'); ?>
-<!--			<i class="mk-moon-search-3 nav-side-search-icon"><input type="submit" value=""/></i>-->
+?>
 
+<div class="mk-responsive-wrap">
+
+	<?php if($hide_header_nav != 'false') { 
+		echo wp_nav_menu(array(
+		    'theme_location' => $menu_location,
+		    'container' => 'nav',
+		    'menu_class' => 'mk-responsive-nav',
+		    'echo' => false,
+		    'fallback_cb' => 'mk_link_to_menu_editor',
+		    'walker' => new mk_main_menu_responsive_walker,
+		));
+	}
+	?>
+
+	<?php if ($mk_options['header_search_location'] != 'disable') { ?>
+		<form class="responsive-searchform" method="get" action="<?php echo getOption('página_busca'); ?>/">
+		    <i class="mk-icon-search"><input value=""  type="submit" /></i>
             <div class="busca_site">
 
                 <div class="select-style">
@@ -76,16 +87,8 @@ if ($mk_options['header_search_location'] == 'beside_nav') { ?>
                 <button class="botao_buscar" name="Buscar" type="submit" id="Buscar">Buscar</button>
 
             </div>
+            
 		</form>
-	</div>
+	<?php } ?>	
 
 </div>
-
-<?php } elseif ($mk_options['header_search_location'] == 'fullscreen_search') { ?>
-
-	<div class="main-nav-side-search">
-		<a class="mk-search-trigger <?php echo $icon_height; ?> mk-fullscreen-trigger" href="#"><i class="mk-icon-search"></i></a>
-	</div>
-
-<?php
-}

@@ -33,71 +33,87 @@ class SearchComposer{
     }
 
     public function ShortcodeSearch(){
-        $Finalidade = get_query_var('Finalidade', 'Vendsaa');
-        $Categoria = filter_input(INPUT_GET,'Categoria');
-        $Dormitorios = filter_input(INPUT_GET,'Dormitorios');
-        $Vagas = filter_input(INPUT_GET,'Vagas');
+        $options = array( 'options' => array('default'=> 0) );
+        $option['Finalidade'] = filter_input(INPUT_GET,'Finalidade') ;
+        $option['Categoria'] = filter_input(INPUT_GET,'Categoria');
+        $option['Dormitorios'] = filter_input(INPUT_GET,'Dormitorios');
+        $option['Vagas']= filter_input(INPUT_GET,'Vagas');
+        $filter = array();
+        foreach ($option as $key => $item){
+            if(!empty($item)){
+                $filter[$key] = $item;
+            }
+        }
         /*Api dos Imóveis */
         $dados = array(
-            'fields' => array( "Cidade","Categoria","InfraEstrutura", "Bairro","ValorVenda", "ValorLocacao", "Latitude","Longitude", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas", "ValorVenda", "ValorLocacao"),
-            'filter' => array(
-                'Categoria' => $Categoria,
-                'Finalidade' => $Finalidade,
-                'Dormitorios' => $Dormitorios,
-                'Vagas' => $Vagas
-            )
-        );
-
-        $filter = array(
-            'Categoria' => 'Apartamento'
+            'fields' => array("TituloSite", "DescricaoWeb","BanheiroSocialQtd", "Cidade","Categoria","InfraEstrutura", "Bairro","ValorVenda", "ValorLocacao", "Latitude","Longitude", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas", "ValorVenda", "ValorLocacao"),
+            'filter' => $filter
         );
 
         $api = getCall($dados, 'imoveis/listar', null,  false);
+       // print_r($api);
+
         if(count($api) > 0){
             $html .= "<div class='container'>";
-                $html .= "<div class='row'>";
-                    if(!isset($api['message'])){
-                        foreach ($api as $item) {
-                            if($item['Status'] == 'ALUGUEL'){
-                                if($valor > 0){
-                                    $valor = number_format($item['ValorLocacao'], 2, ',', '.');
-                                }
+            $html .= "<div class='row'>";
+                if(empty($api['message'])){
+                    foreach ($api as $item) {
+                        if($item['Status'] == 'ALUGUEL'){
+                            if($item['ValorLocacao'] > 0){
+                                $valor = 'R$ ' . number_format($item['ValorLocacao'], 2, ',', '.');
                             }else{
-                                if($valor > 0){
-                                    $valor = number_format($item['ValorVenda'], 2, ',', '.');
-                                }
+                                $valor =  'Consulte';
                             }
-
-                            $query = getOption('pagina_de_detalhes_do_imovel');
-                            $Url = add_query_arg( array('imovel' => $item['Codigo']), $query );
-                            $template = file_get_contents(getPath('assets/tpl/listagem.tpl.html'));
-
-                            $html .= str_replace(array(
-                                '{{ Categoria }}',
-                                '{{ FotoGrande }}',
-                                '{{ Status }}',
-                                '{{ Valor }}',
-                                '{{ url }}',
-                                '{{ Descricao }}',
-                                '{{ link }}'
-                            ), array(
-                                $item['Categoria'],
-                                showImage($item['FotoDestaque']),
-                                $item['Status'],
-                                $item['ValorVenda'] > 0 ? number_format($item['ValorVenda'], 2, ',', '.') : number_format($item['ValorLocacao'], 2, ',', '.'),
-                                $img = getUrl('/assets/img'),
-                                "{$item['Categoria']}, com {$item['Dormitorios']} dormitórios + {$item['Vagas']} vaga(s) de garagem, com {$item['AreaTotal']} de área total...",
-                                $Url
-                            ), $template);
+                        }else{
+                            if($item['ValorVenda'] > 0){
+                                $valor = 'R$ ' . number_format($item['ValorVenda'], 2, ',', '.');
+                            }else{
+                                $valor = 'Consulte';
+                            }
                         }
-                    }else{
-                        echo "<h3>" . $api['message'] . "</h3>";
+
+                        $query = getOption('pagina_de_detalhes_do_imovel');
+                        $Url = add_query_arg( array('imovel' => $item['Codigo']), $query );
+                        $template = file_get_contents(getPath('assets/tpl/listagem.tpl.html'));
+                        $html .= str_replace(array(
+                            '{{ TituloSite }}',
+                            '{{ Categoria }}',
+                            '{{ FotoGrande }}',
+                            '{{ Status }}',
+                            '{{ Valor }}',
+                            '{{ url }}',
+                            '{{ Descricao }}',
+                            '{{ link }}',
+                            '{{ tamanho }}',
+                            '{{ quartos }}',
+                            '{{ banheiros }}',
+                            '{{ vagas }}'
+                        ), array(
+                            $item['Categoria'],
+                            $item['Categoria'],
+                            showImage($item['FotoDestaque']),
+                            $item['Status'],
+                            $valor,
+                            $img = getUrl('/assets/img'),
+                            wp_trim_words($item['DescricaoWeb'], 30, '...'),
+                            $Url,
+                            ($item['AreaTotal'] > 0 ? $item['AreaTotal'] . 'm²' : 'N/d'),
+                            $item['Dormitorios'],
+                            $item['BanheiroSocialQtd'],
+                            $item['Vagas']
+                        ), $template);
                     }
-                $html .= "</div>";
+                }else{
+                    $template = file_get_contents(getPath('assets/tpl/semResultados.tpl.html'));
+                    $html .= str_replace(array(
+                        '{{ Message }}'
+                    ), array(
+                        $api['message']
+                    ), $template);
+                }
+            $html .= "</div>";
             $html .= "</div>";
             return $html;
-        }else{
-            print_r('Não mostra nada, sem campos suficientes');
         }
     }
 }
