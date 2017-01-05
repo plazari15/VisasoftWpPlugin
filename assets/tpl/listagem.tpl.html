@@ -1,0 +1,27 @@
+﻿<div class="col-md-6 col-xs-12">
+	<div class="listagem_imoveis">
+		<div class="titulo_imovel">{{ TituloSite }}</div>
+			<div class="row">
+				<div class="col-md-6 col-xs-12 no-padding-right">
+					<div class="foto_imovel">
+						<img src="{{ FotoGrande }}" width="235" height="157" style="float:left" alt=""/>
+						<div class="tarja_vermelha">{{ Status }}</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xs-12 no-padding-left">
+					<div class="informacoes_imovel">
+						<div class="preco_imovel">{{ Valor }}</div>
+						<div class="resumo-imovel">
+							{{ Descricao }}</div>
+						<div class="ir_imovel"><a href="{{ link }}">Mais Detalhes</a></div>
+					</div>
+				</div>
+			</div>
+			<div class="dados-imovel">
+				<div class="caracteristica_imovel"><img src="{{ url }}/area.jpg" style="float: left;margin-top: -4px;" width="21" height="23" alt=""/>{{ tamanho }}</div>
+				<div class="caracteristica_imovel"><img src="{{ url }}/quartos.jpg" style="float: left;margin-top: -4px;" width="21" height="23" alt=""/> {{ quartos }} quartos</div>
+				<div class="caracteristica_imovel"> <img src="{{ url }}/banheiros.jpg" style="float: left;margin-top: -4px;" width="21" height="23" alt=""/>{{ banheiros }} banheiros </div>
+				<div class="caracteristica_imovel"> <img src="{{ url }}/garagem.jpg" style="float: left;margin-top: -4px;" width="21" height="23" alt=""/>{{ vagas }} garagens</div>
+			</div>
+        </div>
+</div>

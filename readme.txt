@@ -1,1 +1,1 @@
-Aqui temos um exemplo do que tem em nossa nova versão
+Atualizamos!

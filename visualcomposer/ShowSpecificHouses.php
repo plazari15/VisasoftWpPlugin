@@ -35,35 +35,24 @@ class ShowSpecificHouses{
     public function ShortcodeShowSpecificHouses(){
         /*Api dos Imóveis */
         $dados = array(
-            'fields' => array( "Cidade","Categoria","InfraEstrutura", "Bairro","ValorVenda", "ValorLocacao", "Latitude","Longitude", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas", "ValorVenda", "ValorLocacao", array("Foto" => ["Foto", "FotoPequena", "Destaque"]), array("Video" => ["Video"])),
+            'fields' => array( "DescricaoEmpreendimento", "DescricaoWeb","BanheiroSocialQtd", "Cidade","Categoria","InfraEstrutura", "Bairro","ValorVenda", "ValorLocacao", "Latitude","Longitude", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas", "ValorVenda", "ValorLocacao", array("Foto" => ["Foto", "FotoPequena", "Destaque"]), array("Video" => ["Video"])),
         );
 
         $api = getCall($dados, 'imoveis/detalhes', filter_input(INPUT_GET, 'imovel', FILTER_VALIDATE_INT), false);
-        //print_r($api);
         if(count($api) > 0){
             /* Api do Google */
             $google = getGoogleMaps("http://maps.googleapis.com/maps/api/geocode/json?latlng={$api['Latitude']},{$api['Longitude']}&sensor=true");
             /* Repete as principais caracteristicas */
             foreach ($api['Caracteristicas'] as $key => $item){
-                if($item != 'Nao' && $key != 'Andar Do Apto'){
-                    $ArrayComposicao .= "- {$key}: {$item}<br>";
+                if($item != 'Nao' && $key != 'Andares' && $key != 'Andar Do Apto'  && !empty($item)){
+                    $Caracteristicas .= "- {$key}". ($item > 0 ? ': '.$item : '') ."<br>";
                 }
             }
-            /* Repete TODAS as  caracteristicas */
-            $i = 0;
-            foreach ($api['Caracteristicas'] as $key => $item){
-                    if(($i % 2 == 0)){
-                        $class = 'align-left';
-                    }else{
-                        $class = null;
-                    }
-                    $Caracteristicas .= "<span class='{$class}'>- {$key}: {$item}<br></span>";
-                    $i++;
-            }
-
             /* Repete INFRAESTRUTURA */
             foreach ($api['InfraEstrutura'] as $key => $item){
-                    $Infraestrutura .= "- {$key}: {$item}<br>";
+                    if(!empty($item) && $item != 'Nao' ){
+                        $Infraestrutura .= "- {$key}". ($item > 0 ? ': '.$item : '') ."<br>";
+                    }
             }
             /* Template */
             $template = file_get_contents(getPath('assets/tpl/exibe_imovel.tpl.html'));
@@ -73,7 +62,7 @@ class ShowSpecificHouses{
              */
             foreach ($api['Foto'] as $foto){
                 if($foto['Destaque'] != "Sim"){
-                    $Fotos .= "<div class=\"todas_as_fotos\"><img src='{$foto['Foto']}' width=\"198\" height=\"156\" alt=\"\"/></div>";
+                    $Fotos .= "<li><img src='{$foto['Foto']}' width=\"198\" height=\"156\" alt=\"\"/></li>";
                 }
             }
             /**
@@ -101,6 +90,7 @@ class ShowSpecificHouses{
                 '{{ Fotos }}',
                 '{{ Latitude }}',
                 '{{ Longitude }}',
+                '{{ DescricaoEmpreendimento }}'
 
             ), array(
                 $api['FotoDestaque'],
@@ -109,22 +99,23 @@ class ShowSpecificHouses{
                 $api['Codigo'],
                 $api['Categoria'],
                 $google['results'][0]['address_components'][2]['long_name'],
-                $ArrayComposicao,
+                $api['DescricaoWeb'],
                 $img = getUrl('/assets/img'),
                 $google['results'][0]['address_components'][1]['long_name'],
                 $google['results'][0]['address_components'][0]['long_name'],
                 $google['results'][0]['address_components'][3]['long_name'],
-                $api['AreaTotal'],
+                ($api['AreaTotal'] > 0 ? $api['AreaTotal'] . 'm²' : 'N/d') ,
                 $api['Dormitorios'],
                 $api['Vagas'],
-                $api['Caracteristicas']['Lavabo'] == 'Nao' ? '0' : $api['Caracteristicas']['Lavabo'],
+                $api['BanheiroSocialQtd'],
                 $Caracteristicas,
                 $Infraestrutura,
                 !empty($api['Video']) ? "<iframe width=\"628\" height=\"315\" src='{$api['Video']['Video']}'
           frameborder=\"0\" allowfullscreen></iframe>" : '',
                 $Fotos,
                 $api['Latitude'],
-                $api['Longitude']
+                $api['Longitude'],
+                $api['DescricaoEmpreendimento'],
             ), $template);
             return $final; //Return
         }

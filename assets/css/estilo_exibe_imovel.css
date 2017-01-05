@@ -1,0 +1,150 @@
+
+.exibe_imovel_conteudo{
+	width: 1140px;
+    margin: 0px auto;
+	}
+	
+.coluna01{
+	float: left;
+    width: 624px;
+}
+
+.galeria{
+	/*float: left;*/
+	position: relative;
+    display: inline-block;
+	width: 100%;
+}
+
+.foto_grande{
+	/*float: left;
+    padding: 5px 5px 5px 5px;*/
+	position: relative;
+}
+	.foto_grande img {
+    width: 100%;
+    height: auto;
+}
+.tarja_informacao{
+    position: absolute;
+    background-color: red;
+    color: white;
+    font-family: arial;
+    padding: 10px 42px 10px 53px;
+    font-size: 26px;
+    /* margin: 44px 0px 0px 0px; */
+    top: 44px;
+}
+
+.tarja_preco{
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    /* margin: -85px 0px 0px 0px; */
+    /* height: 89px; */
+    /* float: left; */
+    width: 100%;
+    font-size: 40px;
+    font-family: arial;
+    padding: 13px 0px 20px 10px;
+    position: absolute;
+    /* border: 0; */
+    /* display: block; */
+    bottom: 0;
+}
+
+.fotos_menores{
+	float: left;
+}
+
+.todas_as_fotos{
+	float: left;
+    padding: 5px 5px 5px 5px;
+}
+
+.video_imovel{
+	/*float: left;*/
+}
+
+.coluna02{
+	float: left;
+    width: 410px;
+    padding: 0px 0px 0px 20px;
+}
+
+.codigo_imovel{
+	    /* width: 300px; */
+    padding: 15px 15px 15px 15px;
+    background-color: black;
+    color: white;
+    font-size: 14px;
+    font-family: arial;
+    float: left;
+    margin: 4px 0px 0px 0px;
+}
+
+.titulo_imovel_exibe{
+	/*float: left;*/
+    font-family: arial;
+    font-weight: bold;
+    font-size: 33px;
+    padding: 12px 0px 15px 0px;
+    line-height: 39px;
+    letter-spacing: -1px;
+	display: inline-block;
+}
+
+.descricao_imovel{
+	/*float: left;*/
+    font-family: arial;
+    color: #888888;
+    font-size: 15px;
+    margin: 0px 0px 25px 0px;
+}
+
+.dados-imovel{
+	width: 100%;
+    /*float: left;*/
+    background-color: whitesmoke;
+    border: 1px solid #e0e0e0;
+    margin: 10px 0px 0px 0px;
+    padding: 10px 10px 10px 10px;
+    /*height: 20px;*/
+	display: inline-block;
+}
+
+.caracteristica_imovel{
+	float: left;
+    /* width: 23%; */
+    /* border: 1px solid #d8d8d8; */
+    font-family: arial;
+    font-size: 13px;
+    padding: 10px;
+}
+
+.endereco_imovel{
+	/*float: left;*/
+    font-family: arial;
+    font-size: 16px;
+    margin: 10px 0px 0px 0px;
+    color: #383838;
+}
+.ver_mapa_imovel {
+}
+.ver_mapa_imovel a{
+	/*float: left; */
+    padding: 15px 20px 15px 20px;
+    background-color: red;
+    /* margin: 11px 200px 0px 0px; */
+    color: white;
+    font-size: 20px;
+    font-family: arial;
+    letter-spacing: 0px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.flexslider {
+	margin: 0px;
+	border: none;
+}

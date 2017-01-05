@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Vista Soft API
  * Description: Plugin criado para exibir todos os imóveis cadastrados pelo usuário!
- * Version: 1.0.0
+ * Version: 1.2.8
  * Author: Pedro Lazari
  * Author URI: http://pedrolazari.com
  * http://www.vistasoft.com.br/api/#pesquisar
@@ -30,7 +30,7 @@ require_once( plugin_dir_path(__FILE__) . 'update.php' );
 
 function my_acf_init() {
 
-    acf_update_setting('show_admin', true);
+    acf_update_setting('show_admin', false);
 
 }
 
@@ -53,8 +53,17 @@ function wpdocs_theme_name_scripts() {
     $googleKey = getOption('google_api');
     wp_enqueue_style( 'bootstrap', plugin_dir_url(__FILE__) . 'thirdParty/bootstrap/css/bootstrap.css', array(), date('s'));
     wp_enqueue_style( 'custom-plugin', plugin_dir_url(__FILE__) . 'assets/css/custom.css');
+    wp_enqueue_style( 'fancy-box', plugin_dir_url(__FILE__) . 'assets/css/jquery.fancybox.css');
+    wp_enqueue_style( 'flexslider', plugin_dir_url(__FILE__) . 'assets/css/flexslider.css');
+    wp_enqueue_style( 'estilo_exibe_imovel', plugin_dir_url(__FILE__) . 'assets/css/estilo_exibe_imovel.css');
+    wp_enqueue_style( 'estilo_listagem', plugin_dir_url(__FILE__) . 'assets/css/estilo-listagem.css');
     wp_enqueue_script( 'script-maps', plugin_dir_url(__FILE__) . 'assets/js/GoogleMaps.js', array('jquery', 'script-google'), '1.0.0', true );
     wp_enqueue_script( 'script-google', "https://maps.googleapis.com/maps/api/js?key={$googleKey}", array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'jquery.fancybox', plugin_dir_url(__FILE__) . 'assets/js/jquery.fancybox.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'jquery.fancybox-media', plugin_dir_url(__FILE__) . 'assets/js/jquery.fancybox-media.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'jquery.flexslider', plugin_dir_url(__FILE__) . 'assets/js/jquery.flexslider.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'bootstrap', plugin_dir_url(__FILE__) . 'assets/js/bootstrap.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'comum', plugin_dir_url(__FILE__) . 'assets/js/comum.js', array('jquery'), '1.0.0', true );
 //    wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/example.js', array(), '1.0.0', true );
 }
 add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
@@ -62,17 +71,14 @@ add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
 /**
  * Mãe da API
  */
-function getCall($dados, $action, $imovel = null, $filter = null, $debug = false){
+function getCall($dados, $action, $imovel = null, $debug = false){
     $key         =  get_field('api_key', 'option'); //Informe sua chave aqui
     $postFields  =  json_encode( $dados );
-    $url         =  get_field('url_do_cliente', 'option') . $action .'?key=' . $key;
+    $url         =  get_field('url_do_cliente', 'option') . '/'. $action .'?key=' . $key;
     if($imovel != null){
         $url .= '&imovel=' . $imovel;
     }
 
-    if($filter != null){
-        $url .= '&filter=' . json_encode($filter);
-    }
     $url        .=  '&pesquisa=' . $postFields;
 
     $ch = curl_init($url);

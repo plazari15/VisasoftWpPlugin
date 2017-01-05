@@ -27,58 +27,96 @@ class ShowAllHouses{
             'description' => 'Mostra todas as casas',
             'base' => 'allhouses',
             'controls' => 'full',
-            'category' => 'Vistasoft'
+            'category' => 'Vistasoft',
+            'params' => array(
+                array(
+                    'type' => 'dropdown',
+                    'heading' => "Finalidade",
+                    'param_name' => 'finalidade',
+                    'value' => array( "VENDA", "ALUGUEL", "VENDA E ALUGUEL" ),
+                    'description' => 'Qual o tipo de imovel que deseja exibir'
+                ),
+                array(
+                    "type" => "textfield",
+                    "holder" => "div",
+                    "class" => "",
+                    "heading" => 'Qtd. Por página',
+                    "param_name" => "itens",
+                    "value" => "10",
+                    "description" => "Exibir itens por página"
+                ),
+            )
         ]);
 
     }
 
-    public function ShortcodeAllHouses(){
+    public function ShortcodeAllHouses( $atts, $content = null ){
+        extract( shortcode_atts( array(
+            'finalidade' => 'VENDA',
+            'itens' => '10',
+        ), $atts ) );
         $dados = array(
-            'fields' => array( "Categoria","Cidade","Bairro","ValorVenda", "ValorLocacao", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas" )
+            'fields' => array( "TituloSite", "DescricaoWeb","BanheiroSocialQtd", "Categoria","Cidade","Bairro","ValorVenda", "ValorLocacao", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas" ),
+            'filter' => array(
+                'Status' => $finalidade,
+                'ExibirNoSite' => 'Sim',
+                'DestaqueWeb' => 'Sim'
+            ),
+            'paginacao' => array("pagina" => '1', "quantidade" => $itens)
         );
         $api = getCall($dados, '/imoveis/listar', null, false);
+        //print_r($api);
+
         if(count($api) > 0){
-            $html .= "<div class='conteudo_meio'>";
-                foreach ($api as $item) {
-                    $foto = showImage($item['FotoDestaque']);
-                    if($item['Status'] == 'ALUGUEL'){
-                        if($valor > 0){
-                            $valor = number_format($item['ValorLocacao'], 2, ',', '.');
+            $html .= "<div class='container'>";
+                $html .= "<div class='row'>";
+                    foreach ($api as $item) {
+                        if($item['Status'] == 'ALUGUEL'){
+                            if($item['ValorLocacao'] > 0){
+                                $valor = 'R$ ' . number_format($item['ValorLocacao'], 2, ',', '.');
+                            }else{
+                                $valor =  'Consulte';
+                            }
+                        }else{
+                            if($item['ValorVenda'] > 0){
+                                $valor = 'R$ ' . number_format($item['ValorVenda'], 2, ',', '.');
+                            }else{
+                                $valor = 'Consulte';
+                            }
                         }
-                    }else{
-                        if($valor > 0){
-                            $valor = number_format($item['ValorVenda'], 2, ',', '.');
-                        }
-                    }
-                    if($item['Caracteristicas']['Lavabo'] == 'Nao'){
-                        $lavabo = 0;
-                    }else{
-                        $lavabo = $item['Caracteristicas']['Lavabo'];
-                    }
-                    $query = getOption('pagina_de_detalhes_do_imovel');
-                    $Url = add_query_arg( array('imovel' => $item['Codigo']), $query );
-                    $img = getUrl();
-                    $html .= "<div class='listagem_imoveis'>";
-                        $html .= "<div class='titulo_imovel'>{$item['Categoria']}</div>";
-                        $html .= "<div class='foto_imovel'>";
-                            $html .= "<img src='{$foto}' width='235' height='157' style='float:left' alt=''>";
-                            $html .= "<div class='tarja_vermelha'>{$item['Status']}</div>";
-                        $html .= "</div>";
 
-                        $html .= "<div class='informacoes_imovel'>";
-                            $html .= "<div class='preco_imovel'>R$ {$valor}</div>";
-                            $html .= "<div class='resumo-imovel'>{$item['Categoria']}, com {$item['Dormitorios']} dormitórios + {$item['Vagas']} vaga(s) de garagem, com {$item['AreaTotal']} de área total...</div>";
-                            $html .= "<div class='ir_imovel'><a href='{$Url}'>Mais Detalhes</a></div>";
-                        $html .= "</div> ";
-
-                        $html .= "<div class='dados-imovel'>";
-                            $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/area.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$item['AreaTotal']}m²</div>";
-                            $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/quartos.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$item['Dormitorios']} quartos</div>";
-                            $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/banheiros.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$lavabo} Lavabo(s)</div>";
-                            $html .= "<div class='caracteristica_imovel'><img src='{$img}/assets/img/garagem.jpg' style='float: left;margin-top: -4px;' width='21' height='23' alt=''/>{$item['Vagas']} vagas</div>";
-                        $html .= "</div> ";
-                    $html .= "</div>";
-                }
+                        $query = getOption('pagina_de_detalhes_do_imovel');
+                        $Url = add_query_arg( array('imovel' => $item['Codigo']), $query );
+                        $template = file_get_contents(getPath('assets/tpl/listagem.tpl.html'));
+                        $html .= str_replace(array(
+                            '{{ TituloSite }}',
+                            '{{ Categoria }}',
+                            '{{ FotoGrande }}',
+                            '{{ Status }}',
+                            '{{ Valor }}',
+                            '{{ url }}',
+                            '{{ Descricao }}',
+                            '{{ link }}',
+                            '{{ tamanho }}',
+                            '{{ quartos }}',
+                            '{{ banheiros }}',
+                            '{{ vagas }}'
+                        ), array(
+                            $item['Categoria'],
+                            $item['Categoria'],
+                            showImage($item['FotoDestaque']),
+                            $item['Status'],
+                            $valor,
+                            $img = getUrl('/assets/img'),
+                            wp_trim_words($item['DescricaoWeb'], 30, '...'),
+                            $Url,
+                            ($item['AreaTotal'] > 0 ? $item['AreaTotal'] . 'm²' : 'N/d'),
+                            $item['Dormitorios'],
+                            $item['BanheiroSocialQtd'],
+                            $item['Vagas']
+                        ), $template);
+                    }
+                $html .= "</div>";
             $html .= "</div>";
             return $html;
         }
