@@ -71,10 +71,13 @@ add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
 /**
  * Mãe da API
  */
-function getCall($dados, $action, $imovel = null, $debug = false){
+function getCall($dados, $action, $imovel = null, $paginar = false, $debug = false){
     $key         =  get_field('api_key', 'option'); //Informe sua chave aqui
     $postFields  =  json_encode( $dados );
     $url         =  get_field('url_do_cliente', 'option') . '/'. $action .'?key=' . $key;
+    if($paginar){
+        $url .= '&showtotal=1';
+    }
     if($imovel != null){
         $url .= '&imovel=' . $imovel;
     }
@@ -140,6 +143,27 @@ function getPath($file = null){
  */
 function getOption($field){
     return get_field($field, 'option');
+}
+
+/**
+ * Criar paginação
+ */
+function CreatePagination($paginas = 2, $args = array() ){
+    global $wp;
+    $html = '<div class="container">';
+        $html .= '<div class="row">';
+            $html .= '<ul class="pagination">';
+            //Aqui vem meu repetidor
+                for ($i = 1; $i <= $paginas; $i++){
+                    $args['pagina'] = $i;
+                    $url = home_url(add_query_arg(array($args),$wp->request));
+                    $html .= "<li><a href='{$url}'>{$i}</a></li>";
+                }
+            $html .= '</ul>';
+        $html .= '</div>';
+    $html .= '</div>';
+
+    return $html;
 }
 
 /**

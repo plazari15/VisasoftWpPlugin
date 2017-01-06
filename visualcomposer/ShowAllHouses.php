@@ -44,6 +44,13 @@ class ShowAllHouses{
                     'description' => 'Exibir imoveis em destaque'
                 ),
                 array(
+                    'type' => 'checkbox',
+                    'heading' => "Criar paginação",
+                    'param_name' => 'paginar',
+                    'value' => array("Sim" => true),
+                    'description' => 'Criar paginação'
+                ),
+                array(
                     "type" => "textfield",
                     "holder" => "div",
                     "class" => "",
@@ -61,77 +68,90 @@ class ShowAllHouses{
         extract( shortcode_atts( array(
             'finalidade' => 'VENDA',
             'itens' => '50',
-            'destaque' => 'Não'
+            'destaque' => 'Não',
+            'paginar' => false
         ), $atts ) );
+        $pagina_atual = filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT);
+        // Carrega um array com algumas infos de filtro
         $array = array();
         if($DestaqueWeb != 'Não'){
             $array['DestaqueWeb'] = 'Sim';
         }
 
+        /**
+         * Carrega a finalidade do imovel
+         */
         if(!empty($finalidade)){
             $array['Status'] = $finalidade;
         }
 
+        // Exibe no site
         $array['ExibirNoSite'] = "Sim";
 
-        $pagina['pagina'] = '1',
-        $pagina['quantidade'] = 
+        //Busca pela página
+        $pagina['pagina'] = (!empty($pagina_atual) ? $pagina_atual : 1);
+        $pagina['quantidade'] = !empty($itens) ? $itens : '50';
 
         $dados = array(
             'fields' => array( "TituloSite", "DescricaoWeb","BanheiroSocialQtd", "Categoria","Cidade","Bairro","ValorVenda", "ValorLocacao", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas" ),
             'filter' => $array,
-            'paginacao' => array("pagina" => '1', "quantidade" => $itens)
+            'paginacao' => $pagina
         );
-        $api = getCall($dados, '/imoveis/listar', null, false);
+        $api = getCall($dados, '/imoveis/listar', null, $paginar, false);
 
         if(count($api) > 0){
             $html .= "<div class='container'>";
                 $html .= "<div class='row'>";
                     foreach ($api as $item) {
-                        if($item['Status'] == 'ALUGUEL'){
-                            if($item['ValorLocacao'] > 0){
-                                $valor = 'R$ ' . number_format($item['ValorLocacao'], 2, ',', '.');
-                            }else{
-                                $valor =  'Consulte';
+                        if ($item['Codigo']) {
+                            if ($item['Status'] == 'ALUGUEL') {
+                                if ($item['ValorLocacao'] > 0) {
+                                    $valor = 'R$ ' . number_format($item['ValorLocacao'], 2, ',', '.');
+                                } else {
+                                    $valor = 'Consulte';
+                                }
+                            } else {
+                                if ($item['ValorVenda'] > 0) {
+                                    $valor = 'R$ ' . number_format($item['ValorVenda'], 2, ',', '.');
+                                } else {
+                                    $valor = 'Consulte';
+                                }
                             }
-                        }else{
-                            if($item['ValorVenda'] > 0){
-                                $valor = 'R$ ' . number_format($item['ValorVenda'], 2, ',', '.');
-                            }else{
-                                $valor = 'Consulte';
-                            }
-                        }
 
-                        $query = getOption('pagina_de_detalhes_do_imovel');
-                        $Url = add_query_arg( array('imovel' => $item['Codigo']), $query );
-                        $template = file_get_contents(getPath('assets/tpl/listagem.tpl.html'));
-                        $html .= str_replace(array(
-                            '{{ TituloSite }}',
-                            '{{ Categoria }}',
-                            '{{ FotoGrande }}',
-                            '{{ Status }}',
-                            '{{ Valor }}',
-                            '{{ url }}',
-                            '{{ Descricao }}',
-                            '{{ link }}',
-                            '{{ tamanho }}',
-                            '{{ quartos }}',
-                            '{{ banheiros }}',
-                            '{{ vagas }}'
-                        ), array(
-                            $item['Categoria'],
-                            $item['Categoria'],
-                            showImage($item['FotoDestaque']),
-                            $item['Status'],
-                            $valor,
-                            $img = getUrl('/assets/img'),
-                            wp_trim_words($item['DescricaoWeb'], 15, '...'),
-                            $Url,
-                            ($item['AreaTotal'] > 0 ? $item['AreaTotal'] . 'm²' : 'N/d'),
-                            $item['Dormitorios'],
-                            $item['BanheiroSocialQtd'],
-                            $item['Vagas']
-                        ), $template);
+                            $query = getOption('pagina_de_detalhes_do_imovel');
+                            $Url = add_query_arg(array('imovel' => $item['Codigo']), $query);
+                            $template = file_get_contents(getPath('assets/tpl/listagem.tpl.html'));
+                            $html .= str_replace(array(
+                                '{{ TituloSite }}',
+                                '{{ Categoria }}',
+                                '{{ FotoGrande }}',
+                                '{{ Status }}',
+                                '{{ Valor }}',
+                                '{{ url }}',
+                                '{{ Descricao }}',
+                                '{{ link }}',
+                                '{{ tamanho }}',
+                                '{{ quartos }}',
+                                '{{ banheiros }}',
+                                '{{ vagas }}'
+                            ), array(
+                                $item['Categoria'],
+                                $item['Categoria'],
+                                showImage($item['FotoDestaque']),
+                                $item['Status'],
+                                $valor,
+                                $img = getUrl('/assets/img'),
+                                wp_trim_words($item['DescricaoWeb'], 15, '...'),
+                                $Url,
+                                ($item['AreaTotal'] > 0 ? $item['AreaTotal'] . 'm²' : 'N/d'),
+                                $item['Dormitorios'],
+                                $item['BanheiroSocialQtd'],
+                                $item['Vagas']
+                            ), $template);
+                        } //Fim Foreach
+                    }
+                    if($paginar){
+                        $html .= CreatePagination($api['paginas']);
                     }
                 $html .= "</div>";
             $html .= "</div>";
