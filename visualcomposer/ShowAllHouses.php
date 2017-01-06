@@ -33,7 +33,7 @@ class ShowAllHouses{
                     'type' => 'dropdown',
                     'heading' => "Finalidade",
                     'param_name' => 'finalidade',
-                    'value' => array( "VENDA", "ALUGUEL", "VENDA E ALUGUEL" ),
+                    'value' => array( "VENDA", "ALUGUEL"),
                     'description' => 'Qual o tipo de imovel que deseja exibir'
                 ),
                 array(
@@ -50,6 +50,14 @@ class ShowAllHouses{
                     'value' => array("Sim" => true),
                     'description' => 'Criar paginação'
                 ),
+
+                array(
+                    'type' => 'checkbox',
+                    'heading' => "Exibir apenas Super Destaques",
+                    'param_name' => 'superdestaque',
+                    'value' => array("Sim" => true),
+                    'description' => 'Exibir apenas super destaques'
+                ),
                 array(
                     "type" => "textfield",
                     "holder" => "div",
@@ -57,7 +65,7 @@ class ShowAllHouses{
                     "heading" => 'Qtd. Por página',
                     "param_name" => "itens",
                     "value" => "10",
-                    "description" => "Exibir itens por página"
+                    "description" => "O Máximo permitido por página são 50 itens!"
                 ),
             )
         ]);
@@ -69,13 +77,18 @@ class ShowAllHouses{
             'finalidade' => 'VENDA',
             'itens' => '50',
             'destaque' => 'Não',
-            'paginar' => false
+            'paginar' => false,
+            'superdestaque' => false
         ), $atts ) );
         $pagina_atual = filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT);
         // Carrega um array com algumas infos de filtro
         $array = array();
         if($DestaqueWeb != 'Não'){
             $array['DestaqueWeb'] = 'Sim';
+        }
+
+        if($superdestaque){
+            $array['SuperDestaqueWeb'] = 'sim';
         }
 
         /**
