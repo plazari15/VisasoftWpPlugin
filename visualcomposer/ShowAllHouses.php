@@ -21,7 +21,13 @@ class ShowAllHouses{
             add_action('admin_notices', array( $this, 'showVcVersionNotice' ));
             return;
         }
-
+        $FinalidadeDescription = "VENDA = Imoveis que estão a venda<br>";
+        $FinalidadeDescription .= "ALUGUEL = Imoveis que estão disponiveis para alugar<br>";
+        $FinalidadeDescription .= "TEMPORADA = Imoveis que estão disponiveis para alugar e estão marcados como 'Super Destaque'<br>";
+        $FinalidadeDescription .= "LANÇAMENTO = Imoveis que estão disponiveis para venda ou aluguel e estão marcados como 'Lançamento'<br>";
+        $FinalidadeDescription .= "FRENTE PARA O MAR = Imoveis para venda ou aluguel que estão marcados com a opção 'Exclusivo'*<br>";
+        $FinalidadeDescription .= "<small>*Devido a problemas com a API, estamos em contato com a equipe de desenvolvimento vistaSoft para tentar filtar melhor
+                                    imoveis com vista para o mar.</small>";
         vc_map([
             'name' => 'Show All Houses',
             'description' => 'Mostra todas as casas',
@@ -33,8 +39,8 @@ class ShowAllHouses{
                     'type' => 'dropdown',
                     'heading' => "Finalidade",
                     'param_name' => 'finalidade',
-                    'value' => array( "VENDA", "ALUGUEL"),
-                    'description' => 'Qual o tipo de imovel que deseja exibir'
+                    'value' => array( "VENDA", "ALUGUEL", "TEMPORADA", "LANÇAMENTO", "FRENTE PARA O MAR"),
+                    'description' => $FinalidadeDescription
                 ),
                 array(
                     'type' => 'dropdown',
@@ -49,14 +55,6 @@ class ShowAllHouses{
                     'param_name' => 'paginar',
                     'value' => array("Sim" => true),
                     'description' => 'Criar paginação'
-                ),
-
-                array(
-                    'type' => 'checkbox',
-                    'heading' => "Exibir apenas Super Destaques",
-                    'param_name' => 'superdestaque',
-                    'value' => array("Sim" => true),
-                    'description' => 'Exibir apenas super destaques'
                 ),
                 array(
                     "type" => "textfield",
@@ -78,28 +76,48 @@ class ShowAllHouses{
             'itens' => '50',
             'destaque' => 'Não',
             'paginar' => false,
-            'superdestaque' => false
         ), $atts ) );
         $pagina_atual = filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT);
         // Carrega um array com algumas infos de filtro
         $array = array();
-        if($DestaqueWeb != 'Não'){
+        if($destaque != 'Não'){
             $array['DestaqueWeb'] = 'Sim';
-        }
-
-        if($superdestaque){
-            $array['SuperDestaqueWeb'] = 'sim';
         }
 
         /**
          * Carrega a finalidade do imovel
          */
-        if(!empty($finalidade)){
-            $array['Status'] = $finalidade;
-        }
+//        if(!empty($finalidade)){
+//            $array['Status'] = $finalidade;
+//        }
 
         // Exibe no site
         $array['ExibirNoSite'] = "Sim";
+
+        /* Alguns filtros pré-definidos*/
+        switch ($finalidade){
+            case 'VENDA':
+                $array['Status'] = 'VENDA';
+                break;
+
+            case 'ALUGUEL':
+                $array['Status'] = 'ALUGUEL';
+            break;
+
+            case 'TEMPORADA':
+                $array['Status'] = 'ALUGUEL';
+                $array['SuperDestaqueWeb'] = 'Sim';
+                break;
+
+            case 'LANÇAMENTO':
+                $array['Lancamento'] = 'Sim';
+            break;
+
+            case 'FRENTE PARA O MAR':
+                $array['Exclusivo'] = 'Sim';
+            break;
+
+        }
 
         //Busca pela página
         $pagina['pagina'] = (!empty($pagina_atual) ? $pagina_atual : 1);
