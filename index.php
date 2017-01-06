@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Vista Soft API
  * Description: Plugin criado para exibir todos os imóveis cadastrados pelo usuário!
- * Version: 1.5.0
+ * Version: 1.6.2
  * Author: Pedro Lazari
  * Author URI: http://pedrolazari.com
  * http://www.vistasoft.com.br/api/#pesquisar
@@ -148,7 +148,7 @@ function getOption($field){
 /**
  * Criar paginação
  */
-function CreatePagination($paginas = 2, $args = array() ){
+function CreatePagination($paginas = 2, $pagina = 1, $args = array() ){
     global $wp;
     $html = '<div class="container">';
         $html .= '<div class="row">';
@@ -157,7 +157,7 @@ function CreatePagination($paginas = 2, $args = array() ){
                 for ($i = 1; $i <= $paginas; $i++){
                     $args['pagina'] = $i;
                     $url = home_url(add_query_arg(array($args),$wp->request));
-                    $html .= "<li><a href='{$url}'>{$i}</a></li>";
+                    $html .= "<li class='".($pagina == $i ? 'active' : '')."'><a href='{$url}'>{$i}</a></li>";
                 }
             $html .= '</ul>';
         $html .= '</div>';
@@ -165,6 +165,11 @@ function CreatePagination($paginas = 2, $args = array() ){
 
     return $html;
 }
+
+/**
+ * Carregar Localidades
+ */
+
 
 /**
  * Plugin Auto Update

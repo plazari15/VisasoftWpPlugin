@@ -182,7 +182,7 @@ class ShowAllHouses{
                         } //Fim Foreach
                     }
                     if($paginar){
-                        $html .= CreatePagination($api['paginas']);
+                        $html .= CreatePagination($api['paginas'], $pagina['pagina']);
                     }
                 $html .= "</div>";
             $html .= "</div>";

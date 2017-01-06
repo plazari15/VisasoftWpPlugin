@@ -30,6 +30,11 @@ $hide_header_nav = isset($mk_options['hide_header_nav']) ? $mk_options['hide_hea
 		    'walker' => new mk_main_menu_responsive_walker,
 		));
 	}
+
+    $dados = array(
+        'fields' => array("Bairro"),
+    );
+    $api = getCall($dados, '/imoveis/listarConteudo', null, false, false);
 	?>
 
 	<?php if ($mk_options['header_search_location'] != 'disable') { ?>
@@ -39,9 +44,11 @@ $hide_header_nav = isset($mk_options['hide_header_nav']) ? $mk_options['hide_hea
 
                 <div class="select-style">
                     <select name="Finalidade">
-                        <option value="Venda">Venda</option>
-                        <option value="Aluguel">Aluguel</option>
-                        <option value="Venda e Aluguel">Venda e Aluguel</option>
+                        <option value="VENDA">Venda</option>
+                        <option value="ALUGUEL">Aluguel</option>
+                        <option value="TEMPORADA">Temporada</option>
+                        <option value="LANÇAMENTO">Lançamento</option>
+                        <option value="FRENTE PARA O MAR">Frente para o Mar</option>
                     </select>
                 </div>
 
@@ -56,13 +63,14 @@ $hide_header_nav = isset($mk_options['hide_header_nav']) ? $mk_options['hide_hea
                 </div>
 
 
-<!--                <div class="select-style">-->
-<!--                    <select>-->
-<!--                        <option value="Localizacaoo">Localização</option>-->
-<!--                        <option value="saab">Bairro1</option>-->
-<!--                        <option value="mercedes">Bairro2</option>-->
-<!--                    </select>-->
-<!--                </div>-->
+                <div class="select-style">
+                    <select name="Bairro">
+                        <option value="">Bairro</option>
+                        <?php if($api['Bairro']): foreach ($api['Bairro'] as $item): ?>
+                            <option value="<?= $item ?>"><?= $item ?></option>
+                        <?php endforeach; endif;?>
+                    </select>
+                </div>
 
                 <div class="select-style" >
                     <select name="Dormitorios">
