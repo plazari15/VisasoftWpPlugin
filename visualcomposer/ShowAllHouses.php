@@ -37,6 +37,13 @@ class ShowAllHouses{
                     'description' => 'Qual o tipo de imovel que deseja exibir'
                 ),
                 array(
+                    'type' => 'dropdown',
+                    'heading' => "Destaque Web",
+                    'param_name' => 'destaque',
+                    'value' => array("Não", "Sim"),
+                    'description' => 'Exibir imoveis em destaque'
+                ),
+                array(
                     "type" => "textfield",
                     "holder" => "div",
                     "class" => "",
@@ -53,19 +60,29 @@ class ShowAllHouses{
     public function ShortcodeAllHouses( $atts, $content = null ){
         extract( shortcode_atts( array(
             'finalidade' => 'VENDA',
-            'itens' => '10',
+            'itens' => '50',
+            'destaque' => 'Não'
         ), $atts ) );
+        $array = array();
+        if($DestaqueWeb != 'Não'){
+            $array['DestaqueWeb'] = 'Sim';
+        }
+
+        if(!empty($finalidade)){
+            $array['Status'] = $finalidade;
+        }
+
+        $array['ExibirNoSite'] = "Sim";
+
+        $pagina['pagina'] = '1',
+        $pagina['quantidade'] = 
+
         $dados = array(
             'fields' => array( "TituloSite", "DescricaoWeb","BanheiroSocialQtd", "Categoria","Cidade","Bairro","ValorVenda", "ValorLocacao", "Status", "FotoDestaque", "Dormitorios", "Vagas", "AreaTotal", "Caracteristicas" ),
-            'filter' => array(
-                'Status' => $finalidade,
-                'ExibirNoSite' => 'Sim',
-                'DestaqueWeb' => 'Sim'
-            ),
+            'filter' => $array,
             'paginacao' => array("pagina" => '1', "quantidade" => $itens)
         );
         $api = getCall($dados, '/imoveis/listar', null, false);
-        //print_r($api);
 
         if(count($api) > 0){
             $html .= "<div class='container'>";
@@ -108,7 +125,7 @@ class ShowAllHouses{
                             $item['Status'],
                             $valor,
                             $img = getUrl('/assets/img'),
-                            wp_trim_words($item['DescricaoWeb'], 30, '...'),
+                            wp_trim_words($item['DescricaoWeb'], 15, '...'),
                             $Url,
                             ($item['AreaTotal'] > 0 ? $item['AreaTotal'] . 'm²' : 'N/d'),
                             $item['Dormitorios'],
